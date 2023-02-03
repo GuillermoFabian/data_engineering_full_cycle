@@ -2,7 +2,7 @@ first_part/docker_and_sql/venv/
 first_part/docker_and_sql/data_pgadmin/
 first_part/docker_and_sql/ny_taxi_postgres_data/
 second_part/venv
-second_part/data
+#second_part/data
 first_part/modular-rex-375712-ed8b79e7f41c.json
 .idea
 .DSstore
