@@ -1,0 +1,47 @@
+CREATE OR REPLACE EXTERNAL TABLE `dezoomcamp.external_fhv_tripdata`
+OPTIONS (
+  format = 'CSV',
+  uris = ['gs://dt-bucket-rex/data/fhv/fhv_tripdata_2019-*.csv.gz']
+);
+
+CREATE OR REPLACE TABLE `dezoomcamp.fhv_tripdata`
+AS
+SELECT * FROM `dezoomcamp.external_fhv_tripdata`;
+
+select count(*)
+from `dezoomcamp.external_fhv_tripdata`
+limit 10;
+
+select distinct affiliated_base_number
+from `dezoomcamp.external_fhv_tripdata`;
+
+select distinct affiliated_base_number
+from `dezoomcamp.fhv_tripdata`;
+
+
+select count(*)
+from `dezoomcamp.external_fhv_tripdata`
+where PUlocationID is null and DOlocationID is null;
+
+select count(distinct affiliated_base_number)
+from `dezoomcamp.external_fhv_tripdata`;
+
+CREATE OR REPLACE TABLE `dezoomcamp.fhv_tripdata_partition_cluster`
+PARTITION BY DATE(pickup_datetime)
+CLUSTER BY affiliated_base_number AS
+SELECT * FROM `dezoomcamp.external_fhv_tripdata`;
+
+select *
+from `dezoomcamp.fhv_tripdata_partition_cluster`
+WHERE DATE(pickup_datetime) BETWEEN '2019-06-01' AND '2019-06-30'
+order by affiliated_base_number
+limit 100;
+
+select count ( distinct affiliated_base_number )
+from `dezoomcamp.fhv_tripdata`
+WHERE DATE(pickup_datetime) BETWEEN '2019-03-01' AND '2019-03-31'
+
+select count ( distinct affiliated_base_number )
+from `dezoomcamp.fhv_tripdata_partition_cluster`
+WHERE DATE(pickup_datetime) BETWEEN '2019-03-01' AND '2019-03-31'
+
